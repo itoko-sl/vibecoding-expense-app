@@ -1,11 +1,19 @@
 {
-  "name": "expense-app-v2",
+  "name": "vibecoding-expense-app",
   "version": "1.0.0",
-  "description": "社員用経費申請・管理システム",
+  "description": "企業向け経費管理システム - VibeCoding",
   "private": true,
-  "keywords": ["expense", "management", "next.js", "typescript", "tailwindcss"],
-  "author": "Your Name",
+  "keywords": ["expense", "management", "next.js", "typescript", "tailwindcss", "vibecoding"],
+  "author": "VibeCoding",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/itoko-sl/vibecoding-expense-app.git"
+  },
+  "homepage": "https://github.com/itoko-sl/vibecoding-expense-app#readme",
+  "bugs": {
+    "url": "https://github.com/itoko-sl/vibecoding-expense-app/issues"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",

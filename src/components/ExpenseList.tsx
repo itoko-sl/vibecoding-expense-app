@@ -2,12 +2,13 @@
 
 import React from 'react';
 import { format } from 'date-fns';
-import { Clock, CheckCircle, XCircle, Edit } from 'lucide-react';
+import { Clock, CheckCircle, XCircle, Edit, Paperclip } from 'lucide-react';
 import { Expense } from '@/types/expense';
 
 interface ExpenseListProps {
   expenses: Expense[];
   onEdit?: (expense: Expense) => void;
+  onViewDetail?: (expense: Expense) => void;
 }
 
 const statusConfig = {
@@ -37,7 +38,7 @@ const statusConfig = {
   }
 };
 
-export default function ExpenseList({ expenses, onEdit }: ExpenseListProps) {
+export default function ExpenseList({ expenses, onEdit, onViewDetail }: ExpenseListProps) {
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('ja-JP', {
       style: 'currency',
@@ -71,11 +72,20 @@ export default function ExpenseList({ expenses, onEdit }: ExpenseListProps) {
           return (
             <div key={expense.id} className="p-6 hover:bg-gray-50 transition-colors">
               <div className="flex items-start justify-between">
-                <div className="flex-1">
+                <div 
+                  className="flex-1 cursor-pointer"
+                  onClick={() => onViewDetail?.(expense)}
+                >
                   <div className="flex items-center space-x-3 mb-2">
                     <span className="text-lg font-medium text-gray-900">
                       {expense.category}
                     </span>
+                    {expense.receipt && (
+                      <span className="inline-flex items-center text-xs text-gray-500">
+                        <Paperclip className="w-3 h-3 mr-1" />
+                        レシート添付
+                      </span>
+                    )}
                     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusConfig[expense.status].bgColor} ${statusConfig[expense.status].color}`}>
                       <StatusIcon className="w-3 h-3 mr-1" />
                       {statusConfig[expense.status].label}
@@ -100,14 +110,33 @@ export default function ExpenseList({ expenses, onEdit }: ExpenseListProps) {
                   )}
                 </div>
                 
-                {onEdit && (expense.status === '下書き' || expense.status === '差し戻し') && (
-                  <button
-                    onClick={() => onEdit(expense)}
-                    className="ml-4 inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-                  >
-                    編集
-                  </button>
-                )}
+                <div className="ml-4 flex space-x-2">
+                  {/* 詳細ボタン */}
+                  {onViewDetail && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onViewDetail(expense);
+                      }}
+                      className="inline-flex items-center px-3 py-1.5 border border-blue-300 text-sm font-medium rounded-md text-blue-700 bg-blue-50 hover:bg-blue-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      詳細
+                    </button>
+                  )}
+                  
+                  {/* 編集ボタン */}
+                  {onEdit && (expense.status === '下書き' || expense.status === '差し戻し') && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(expense);
+                      }}
+                      className="inline-flex items-center px-3 py-1.5 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                      編集
+                    </button>
+                  )}
+                </div>
               </div>
             </div>
           );
